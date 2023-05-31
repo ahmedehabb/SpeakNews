@@ -1,6 +1,6 @@
 import re
-from text import cleaners
-from text.symbols import symbols
+from TTS.text import cleaners
+from TTS.text.symbols import symbols
 
 
 # Mappings from symbol to numeric ID and vice versa:

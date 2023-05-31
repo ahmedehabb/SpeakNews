@@ -1,15 +1,15 @@
 import io
 import numpy as np
 import tensorflow as tf
-from hparams import hparams
+from TTS.hparam import hparams
 from librosa import effects
-from models import create_model
-from text import text_to_sequence
-from audio import inv_spectrogram_tensorflow,inv_preemphasis,find_endpoint,save_wav
-
+from TTS.models import create_model
+from TTS.text import text_to_sequence
+from TTS.audio import inv_spectrogram_tensorflow,inv_preemphasis,find_endpoint,save_wav
+  
 
 class Synthesizer:
-  def load(self, checkpoint_path, model_name='tacotron'):
+  def __init__(self, checkpoint_path, model_name='tacotron'):
 
     inputs = tf.placeholder(tf.int32, [1, None], 'inputs')
     input_lengths = tf.placeholder(tf.int32, [1], 'input_lengths')
