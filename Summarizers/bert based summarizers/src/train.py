@@ -11,6 +11,7 @@ from train_abstractive import build_abstractive, summarize_by_abstractive
 from train_extractive import summarize_by_extractive, build_extractive
 from models.data_loader import load_one_text
 from flask import Flask, request
+
 app = Flask(__name__)
 
 extractive_summarizer = None
@@ -28,6 +29,23 @@ def preprocess_input_for_extractive(paragraph):
     sentences = paragraph.split(".")
     transformed_text = ". [CLS] [SEP] ".join(sentences)
     return transformed_text.replace("  ", " ")
+
+
+@app.route('/abstractive', methods=['POST'])
+def abstractive():
+    global abstractive_summarizer
+    sentence = request.get_json()['sentence']
+    gen = load_one_text(args, sentence, device)
+    return summarize_by_abstractive(abstractive_summarizer, gen)
+
+
+@app.route('/extractive', methods=['POST'])
+def extractive():
+    global extractive_summarizer
+    sentence = request.get_json()['sentence']
+    sentence = preprocess_input_for_extractive(sentence)
+    gen = load_one_text(args, sentence, device)
+    return summarize_by_extractive(extractive_summarizer, gen)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -125,22 +143,6 @@ if __name__ == '__main__':
     device_id = 0 if device == "cuda" else -1
 
     # load the 2 models    
-    extractive_summarizer = build_extractive(args)
-    abstractive_summarizer = build_abstractive(args)
-
+    extractive_summarizer = build_extractive(args, checkpoint_path = "../models/bertext_cnndm_transformer.pt")
+    abstractive_summarizer = build_abstractive(args, checkpoint_path = "../models/model_step_148000.pt")
     app.run()
-
-@app.route('/abstractive', methods=['POST'])
-def abstractive():
-    global abstractive_summarizer
-    sentence = request.json['sentence']
-    gen = load_one_text(args, sentence, device)
-    return summarize_by_abstractive(abstractive_summarizer, gen)
-
-@app.route('/extractive', methods=['POST'])
-def extractive():
-    global extractive_summarizer
-    sentence = request.json['sentence']
-    sentence = preprocess_input_for_extractive(sentence)
-    gen = load_one_text(args, sentence, device)
-    return summarize_by_extractive(extractive_summarizer, gen)
