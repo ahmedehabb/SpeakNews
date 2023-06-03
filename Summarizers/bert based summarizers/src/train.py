@@ -120,7 +120,7 @@ if __name__ == '__main__':
     parser.add_argument("-recall_eval", type=str2bool, nargs='?',const=True,default=False)
 
 
-    parser.add_argument('-visible_gpus', default='-1', type=str)
+    parser.add_argument('-visible_gpus', default='0', type=str)
     parser.add_argument('-gpu_ranks', default='0', type=str)
     parser.add_argument('-log_file', default='../logs/cnndm.log')
     parser.add_argument('-seed', default=666, type=int)
@@ -143,6 +143,6 @@ if __name__ == '__main__':
     device_id = 0 if device == "cuda" else -1
 
     # load the 2 models    
-    extractive_summarizer = build_extractive(args, checkpoint_path = "../models/bertext_cnndm_transformer.pt")
+    #extractive_summarizer = build_extractive(args, checkpoint_path = "../models/bertext_cnndm_transformer.pt")
     abstractive_summarizer = build_abstractive(args, checkpoint_path = "../models/model_step_148000.pt")
     app.run()

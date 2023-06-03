@@ -360,4 +360,4 @@ def build_abstractive(args, checkpoint_path):
 
 
 def summarize_by_abstractive(predictor, test_iter):
-    return predictor.translate(test_iter, -1)
+    return predictor.summarize_sentence(test_iter, -1)
