@@ -266,9 +266,9 @@ def test_text_ext(args):
     trainer = build_trainer(args, device_id, model, None)
     trainer.test(test_iter, -1)
 
-def build_extractive(args):
-    logger.info('Loading checkpoint from %s' % args.test_from)
-    checkpoint = torch.load(args.test_from, map_location=lambda storage, loc: storage)
+def build_extractive(args, checkpoint_path):
+    logger.info('Loading checkpoint from %s' % checkpoint_path)
+    checkpoint = torch.load(checkpoint_path, map_location=lambda storage, loc: storage)
     opt = vars(checkpoint['opt'])
     for k in opt.keys():
         if (k in model_flags):

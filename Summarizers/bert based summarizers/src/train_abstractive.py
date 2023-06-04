@@ -337,12 +337,12 @@ def test_text_abs(args):
 
 
 
-def build_abstractive(args):
+def build_abstractive(args, checkpoint_path):
 
-    logger.info('Loading checkpoint from %s' % args.test_from)
+    logger.info('Loading checkpoint from %s' % checkpoint_path)
     device = "cpu" if args.visible_gpus == '-1' else "cuda"
 
-    checkpoint = torch.load(args.test_from, map_location=lambda storage, loc: storage)
+    checkpoint = torch.load(checkpoint_path, map_location=lambda storage, loc: storage)
     opt = vars(checkpoint['opt'])
     for k in opt.keys():
         if (k in model_flags):
@@ -360,4 +360,4 @@ def build_abstractive(args):
 
 
 def summarize_by_abstractive(predictor, test_iter):
-    return predictor.translate(test_iter, -1)
+    return predictor.summarize_sentence(test_iter, -1)

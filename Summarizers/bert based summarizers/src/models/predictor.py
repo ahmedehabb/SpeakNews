@@ -195,7 +195,7 @@ class Translator(object):
                   data_iter, step):
 
         self.model.eval()
-        pred = []
+        pred_list = []
         with torch.no_grad():
             for batch in data_iter:
                 if(self.args.recall_eval):
@@ -213,8 +213,8 @@ class Translator(object):
                     gold_str = gold.strip()
                     if(self.args.recall_eval):
                         pred_str = ' '.join(pred_str.split()[:len(gold_str.split())])
-                    pred.append(pred_str)
-        return pred        
+                    pred_list.append(pred_str)
+        return pred_list        
 
     def _report_rouge(self, gold_path, can_path):
         self.logger.info("Calculating Rouge")

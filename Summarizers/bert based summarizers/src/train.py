@@ -7,10 +7,15 @@ from __future__ import division
 import argparse
 import os
 from others.logging import init_logger
-from train_abstractive import build_abstractive, summarize_by_abstractive, validate_abs, train_abs, baseline, test_abs, test_text_abs
-from train_extractive import summarize_by_extractive, train_ext, validate_ext, test_ext, test_text_ext, build_extractive
+from train_abstractive import build_abstractive, summarize_by_abstractive
+from train_extractive import summarize_by_extractive, build_extractive
 from models.data_loader import load_one_text
+from flask import Flask, request
 
+app = Flask(__name__)
+
+extractive_summarizer = None
+abstractive_summarizer = None
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
@@ -20,12 +25,27 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-
-    
 def preprocess_input_for_extractive(paragraph):
-    sentences = paragraph.split(". ")
+    sentences = paragraph.split(".")
     transformed_text = ". [CLS] [SEP] ".join(sentences)
-    return transformed_text
+    return transformed_text.replace("  ", " ")
+
+
+@app.route('/abstractive', methods=['POST'])
+def abstractive():
+    global abstractive_summarizer
+    sentence = request.get_json()['sentence']
+    gen = load_one_text(args, sentence, device)
+    return summarize_by_abstractive(abstractive_summarizer, gen)
+
+
+@app.route('/extractive', methods=['POST'])
+def extractive():
+    global extractive_summarizer
+    sentence = request.get_json()['sentence']
+    sentence = preprocess_input_for_extractive(sentence)
+    gen = load_one_text(args, sentence, device)
+    return summarize_by_extractive(extractive_summarizer, gen)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -100,7 +120,7 @@ if __name__ == '__main__':
     parser.add_argument("-recall_eval", type=str2bool, nargs='?',const=True,default=False)
 
 
-    parser.add_argument('-visible_gpus', default='-1', type=str)
+    parser.add_argument('-visible_gpus', default='0', type=str)
     parser.add_argument('-gpu_ranks', default='0', type=str)
     parser.add_argument('-log_file', default='../logs/cnndm.log')
     parser.add_argument('-seed', default=666, type=int)
@@ -121,14 +141,8 @@ if __name__ == '__main__':
     init_logger(args.log_file)
     device = "cpu" if args.visible_gpus == '-1' else "cuda"
     device_id = 0 if device == "cuda" else -1
-    sentence = """this Terry Jones had a love of the absurd that contributed much to the anarchic humour of Monty Python's Flying Circus. His style of visual comedy, leavened with a touch of the surreal, inspired many comedians who followed him. It was on Python that he honed his directing skills, notably on Life of Brian and The Meaning of Life. A keen historian, he wrote a number of books and fronted TV documentaries on ancient and medieval history. Terence Graham Parry Jones was born in Colwyn Bay in north Wales on 1 February 1942. His grandparents ran the local amateur operatic society and staged Gilbert and Sullivan concerts on the town's pier each year His family moved to Surrey when he was four but he always felt nostalgic about his native land. "I couldn't bear it and for the longest time I wanted Wales back," he once said. "I still feel very Welsh and feel it's where I should be really." After leaving the Royal Grammar School in Guildford, where he captained the school, he went on to read English at St Edmund Hall, Oxford. However, as he put it, he "strayed into history", the subject in which he graduated. While at Oxford he wrote sketches for the Oxford Revue and performed alongside a fellow student, Michael Palin."""
-                  
-    # sentence = preprocess_input_for_extractive(sentence)
-    gen = load_one_text(args, sentence, device)
 
-    # extractive = build_extractive(args)
-    # print(summarize_by_extractive(extractive, gen))
-
-    abstractive = build_abstractive(args)
-    print(summarize_by_abstractive(abstractive, gen))
-
+    # load the 2 models    
+    #extractive_summarizer = build_extractive(args, checkpoint_path = "../models/bertext_cnndm_transformer.pt")
+    abstractive_summarizer = build_abstractive(args, checkpoint_path = "../models/model_step_148000.pt")
+    app.run()
