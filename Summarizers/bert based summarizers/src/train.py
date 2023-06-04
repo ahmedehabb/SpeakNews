@@ -143,6 +143,6 @@ if __name__ == '__main__':
     device_id = 0 if device == "cuda" else -1
 
     # load the 2 models    
-    #extractive_summarizer = build_extractive(args, checkpoint_path = "../models/bertext_cnndm_transformer.pt")
+    extractive_summarizer = build_extractive(args, checkpoint_path = "../models/bertext_cnndm_transformer.pt")
     abstractive_summarizer = build_abstractive(args, checkpoint_path = "../models/model_step_148000.pt")
     app.run()
