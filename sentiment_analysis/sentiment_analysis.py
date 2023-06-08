@@ -95,10 +95,10 @@ def hello():
     output = sentiment_analysis.predict(args['text'])
     return {"prediction":str(output[0]),"probability":str(output[1])}
 def run():
-    serve(app, host="0.0.0.0", port=5000)
+    serve(app, host="0.0.0.0", port=6000)
     return app
 if __name__ == '__main__':
-    app.run()          
+    app.run(host="0.0.0.0", port=2000, debug=True)          
 
            
 
