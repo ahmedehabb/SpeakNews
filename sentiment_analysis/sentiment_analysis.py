@@ -1,5 +1,5 @@
 import re
-import nltk
+# import nltk
 import string
 import numpy as np
 import pandas as pd
@@ -16,7 +16,7 @@ import keras
 import pickle
 
 sns.set(font_scale=1.3)
-nltk.download('omw-1.4') 
+# nltk.download('omw-1.4') 
 def lemmatization(text):
     lemmatizer= WordNetLemmatizer()
     text = text.split()
