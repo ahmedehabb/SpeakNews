@@ -1,7 +1,8 @@
 from __future__ import division
 import torch
 
-
+# constructing different penalty functions used in a beam search algorithm
+# Each length penalty function modifies the log probabilities of the beam candidates to favor shorter or longer sequences based on different strategies or formulas.
 class PenaltyBuilder(object):
     """
     Returns the Length and Coverage Penalty function for Beam Search.
@@ -32,6 +33,9 @@ class PenaltyBuilder(object):
         NMT length re-ranking score from
         "Google's Neural Machine Translation System" :cite:`wu2016google`.
         """
+        # It takes beam, logprobs, and an optional parameter alpha as inputs.
+        # It calculates a modifier value based on the length of the beam sequence (beam.next_ys) and the alpha value.
+        # It returns the log probabilities divided by the modifier value, effectively applying the length penalty.
 
         modifier = (((5 + len(beam.next_ys)) ** alpha) /
                     ((5 + 1) ** alpha))
@@ -40,6 +44,7 @@ class PenaltyBuilder(object):
     def length_average(self, beam, logprobs, alpha=0.):
         """
         Returns the average probability of tokens in a sequence.
+        So lengthy sentences score got normalized when compared when short sentences
         """
         return logprobs / len(beam.next_ys)
 
@@ -47,4 +52,5 @@ class PenaltyBuilder(object):
         """
         Returns unmodified scores.
         """
+        # It simply returns the log probabilities without any modification.
         return logprobs
