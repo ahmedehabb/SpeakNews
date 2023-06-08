@@ -90,10 +90,9 @@ sentiment_analysis = SentimentAnalysis()
 app = Flask(__name__)
 @app.route('/sentiment',methods=["POST"])
 def hello():
-    # print("Hi")
     args = request.json
     output = sentiment_analysis.predict(args['text'])
-    return {"prediction":str(output[0]),"probability":str(output[1])}
+    return {"prediction": str(output[0]),"probability": output[1].astype(float)}
 def run():
     serve(app, host="0.0.0.0", port=6000)
     return app
