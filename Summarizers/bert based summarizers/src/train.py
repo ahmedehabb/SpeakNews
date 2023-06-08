@@ -6,11 +6,13 @@ from __future__ import division
 
 import argparse
 import os
+import json
 from others.logging import init_logger
 from train_abstractive import build_abstractive, summarize_by_abstractive
 from train_extractive import summarize_by_extractive, build_extractive
 from models.data_loader import load_one_text
 from flask import Flask, request
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -43,7 +45,7 @@ def abstractive():
     global abstractive_summarizer
     sentence = request.get_json()['sentence']
     gen = load_one_text(args, sentence, device)
-    return summarize_by_abstractive(abstractive_summarizer, gen)
+    return json.dumps(summarize_by_abstractive(abstractive_summarizer, gen))
 
 
 @app.route('/extractive', methods=['POST'])
@@ -52,7 +54,7 @@ def extractive():
     sentence = request.get_json()['sentence']
     sentence = preprocess_input_for_extractive(sentence)
     gen = load_one_text(args, sentence, device)
-    return summarize_by_extractive(extractive_summarizer, gen)
+    return json.dumps(summarize_by_extractive(extractive_summarizer, gen))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -152,4 +154,4 @@ if __name__ == '__main__':
     # load the 2 models    
     extractive_summarizer = build_extractive(args, checkpoint_path = "../models/bertext_cnndm_transformer.pt")
     abstractive_summarizer = build_abstractive(args, checkpoint_path = "../models/model_step_148000.pt")
-    app.run()
+    app.run(host="0.0.0.0", port=1000, debug=True)
