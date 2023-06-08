@@ -85,7 +85,9 @@ class Wav2Lip(nn.Module):
             nn.Sigmoid()) 
 
     def forward(self, audio_sequences, face_sequences):
-        # audio_sequences = (B, T, 1, 80, 16)
+        
+        # audio_sequences = (B, T, 1, 80, 16) 
+        # (Batch size, # of time steps, # of audio channels, Frequency, Time)
         B = audio_sequences.size(0)
 
         input_dim_size = len(face_sequences.size())
@@ -93,7 +95,9 @@ class Wav2Lip(nn.Module):
             audio_sequences = torch.cat([audio_sequences[:, i] for i in range(audio_sequences.size(1))], dim=0)
             face_sequences = torch.cat([face_sequences[:, :, i] for i in range(face_sequences.size(2))], dim=0)
 
-        audio_embedding = self.audio_encoder(audio_sequences) # B, 512, 1, 1
+        # This encoding process extracts high-level audio features and 
+        # produces an audio_embedding tensor of size (B, 512, 1, 1).
+        audio_embedding = self.audio_encoder(audio_sequences) 
 
         feats = []
         x = face_sequences
@@ -105,6 +109,9 @@ class Wav2Lip(nn.Module):
         for f in self.face_decoder_blocks:
             x = f(x)
             try:
+                # This concatenation allows the decoder blocks to use information 
+                # from both the audio and face encodings 
+                # to generate the reconstructed face sequence.
                 x = torch.cat((x, feats[-1]), dim=1)
             except Exception as e:
                 print(x.size())
@@ -114,11 +121,11 @@ class Wav2Lip(nn.Module):
             feats.pop()
 
         x = self.output_block(x)
-
+        # If it was reshaped at the beginning due to having more than four dimensions,
+        # the output tensor x is split back into individual sequences using torch.split.
         if input_dim_size > 4:
             x = torch.split(x, B, dim=0) # [(B, C, H, W)]
             outputs = torch.stack(x, dim=2) # (B, C, T, H, W)
-
         else:
             outputs = x
             
@@ -149,12 +156,16 @@ class Wav2Lip_disc_qual(nn.Module):
             nn.Sequential(nonorm_Conv2d(512, 512, kernel_size=3, stride=1, padding=0),     # 1, 1
             nonorm_Conv2d(512, 512, kernel_size=1, stride=1, padding=0)),])
 
+        # To predict whether the face sequence is real or fake
         self.binary_pred = nn.Sequential(nn.Conv2d(512, 1, kernel_size=1, stride=1, padding=0), nn.Sigmoid())
+        # Amount of label noise applied during training
         self.label_noise = .0
 
+    # The most important part of the face during lip-sync task is the lip region, 
+    # hence we get the lower half only to enhance the quality of the assessment.
     def get_lower_half(self, face_sequences):
         return face_sequences[:, :, face_sequences.size(2)//2:]
-
+    # This reshaping allows for efficient processing through the convolutional blocks
     def to_2d(self, face_sequences):
         B = face_sequences.size(0)
         face_sequences = torch.cat([face_sequences[:, :, i] for i in range(face_sequences.size(2))], dim=0)
@@ -164,10 +175,12 @@ class Wav2Lip_disc_qual(nn.Module):
         false_face_sequences = self.to_2d(false_face_sequences)
         false_face_sequences = self.get_lower_half(false_face_sequences)
 
+        # Extracting the features
         false_feats = false_face_sequences
         for f in self.face_encoder_blocks:
             false_feats = f(false_feats)
 
+        # binary cross-entropy loss between the predicted labels and the target labels
         false_pred_loss = F.binary_cross_entropy(self.binary_pred(false_feats).view(len(false_feats), -1), 
                                         torch.ones((len(false_feats), 1)).cuda())
 
