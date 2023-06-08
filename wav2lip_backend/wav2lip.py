@@ -292,17 +292,23 @@ app = Flask(__name__)
 
 @app.route('/avatar_generation',methods=["POST"])
 def hello():
-    # print("Hi")
-    args = request.json
-    input_face = args["input_face"]
-    input_audio = args["input_audio"]
-    wav2lip_obj.generate_video(input_audio, input_face)
+    # first_file = request.files.get("input_face")
+    second_file = request.files.get("input_audio")
+
+    # print(first_file)
+    # first_file.save("face.jpeg")
+    second_file.save("audio.wav")
+    # Process the files
+
+    # return "Files uploaded successfully"
+    
+    wav2lip_obj.generate_video( "audio.wav","afifi.jpeg")
 
     return send_file('results/result_voice.mp4', mimetype='video/mp4')
 
 
 def run():
-    serve(app, host="0.0.0.0", port=5000)
+    serve(app, host="0.0.0.0", port=6000)
     return app
 
 

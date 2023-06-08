@@ -20,6 +20,8 @@ class Synthesizer:
 
 
     self.session = tf.Session()
+    tf.train.write_graph(self.session.graph_def, '.', 'tacotron.pbtxt')
+    
     self.session.run(tf.global_variables_initializer())
     saver = tf.train.Saver()
     saver.restore(self.session, checkpoint_path)
