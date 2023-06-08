@@ -28,6 +28,13 @@ def str2bool(v):
 def preprocess_input_for_extractive(paragraph):
     sentences = paragraph.split(".")
     transformed_text = ". [CLS] [SEP] ".join(sentences)
+    # Define the pattern to check
+    pattern = " [CLS] [SEP] "
+
+    # Check if the string ends with the pattern
+    if transformed_text.endswith(pattern):
+        # Remove the pattern from the end of the string
+        transformed_text = transformed_text[: -len(pattern)]
     return transformed_text.replace("  ", " ")
 
 
