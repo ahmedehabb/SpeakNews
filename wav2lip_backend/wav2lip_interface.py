@@ -41,7 +41,7 @@ class Wav2lipInterface:
         self.model = load_model('wav2lip_gan.pth')
         print("Model loaded")
 
-    def generate_video(self, input_audio, input_face, resize_factor=1, is_face_static=True):
+    def generate_video(self, input_audio, input_face, resize_factor=1, is_face_static=False):
         batch_size = 64
         wav2lip_batch_size = 128
 
@@ -207,7 +207,7 @@ def face_detect(images):
     return results
 
 
-def datagen(frames, mels, is_face_static=True):
+def datagen(frames, mels, is_face_static=False):
 
     img_size = 96
     wav2lip_batch_size = 128
@@ -302,7 +302,7 @@ def hello():
 
     # return "Files uploaded successfully"
     
-    wav2lip_obj.generate_video( "audio.wav","afifi.jpeg")
+    wav2lip_obj.generate_video( "audio.wav","mona_shazly.mp4")
 
     return send_file('results/result_voice.mp4', mimetype='video/mp4')
 

@@ -15,6 +15,9 @@ from flask import request
 import keras 
 import pickle
 
+import text2emotion as te
+import emoji
+
 sns.set(font_scale=1.3)
 # nltk.download('omw-1.4') 
 def lemmatization(text):
@@ -91,6 +94,12 @@ app = Flask(__name__)
 @app.route('/sentiment',methods=["POST"])
 def hello():
     args = request.json
+
+
+    emoji.UNICODE_EMOJI = emoji.EMOJI_DATA
+    # print(args['text'])
+    # s= "i feel heartbroken"
+    print(te.get_emotion(args['text']))
     output = sentiment_analysis.predict(args['text'])
     return {"prediction": str(output[0]),"probability": output[1].astype(float)}
 def run():
