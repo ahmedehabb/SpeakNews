@@ -6,7 +6,7 @@ Traditional news reading methods often feel tedious and time consuming, leading 
 
 ## Project Poster
 
-![](images/Final Poster_page-0001.jpg)
+![](images/Final_Poster.jpg)
 
 ## Full System Block Diagram
 
