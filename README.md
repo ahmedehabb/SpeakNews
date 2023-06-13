@@ -16,35 +16,33 @@ Traditional news reading methods often feel tedious and time consuming, leading 
 
 ##### Modifying BERT encoder to fit the Summarization task
 
-![image-20230614003123800](C:\Users\ESC\AppData\Roaming\Typora\typora-user-images\image-20230614003123800.png)
+![](.\images\image-20230614003123800.png)
 
-
-
-![image-20230614003147958](C:\Users\ESC\AppData\Roaming\Typora\typora-user-images\image-20230614003147958.png)
+![image-20230614003147958](.\images\image-20230614003147958.png)
 
 #### Abstractive Summarization Module
 
 ##### Encoder-Decoder Transformer Model
 
-![image-20230614003444224](C:\Users\ESC\AppData\Roaming\Typora\typora-user-images\image-20230614003444224.png)
+![image-20230614003444224](.\images\image-20230614003444224.png)
 
 ### Text to Speech Module
 
 ##### The Full Text-To-Speech Module Architecture
 
-![image-20230614003612048](C:\Users\ESC\AppData\Roaming\Typora\typora-user-images\image-20230614003612048.png)
+![image-20230614003612048](.\images\image-20230614003612048.png)
 
 ### Sentiment Analysis Module
 
 ##### The Sentiment Analysis Module Architecture
 
-![image-20230614003759569](C:\Users\ESC\AppData\Roaming\Typora\typora-user-images\image-20230614003759569.png)
+![image-20230614003759569](.\images\image-20230614003759569.png)
 
 ### Avatar Generation Module
 
 ##### The Full Lib Syncing Module Architecture
 
-![image-20230614003657220](C:\Users\ESC\AppData\Roaming\Typora\typora-user-images\image-20230614003657220.png)
+![image-20230614003657220](.\images\image-20230614003657220.png)
 
 ## Datasets
 
