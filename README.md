@@ -10,7 +10,7 @@ Traditional news reading methods often feel tedious and time consuming, leading 
 
 ## Full System Block Diagram
 
-![block diagram](images\block-diagram.PNG)
+![block diagram](images/block-diagram.PNG)
 =======
 ## Models
 
