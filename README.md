@@ -6,7 +6,7 @@ Traditional news reading methods often feel tedious and time consuming, leading 
 
 ## Full System Block Diagram
 
-![block diagram](images\block diagram.PNG)
+![block diagram](images/block diagram.PNG)
 
 ## Models
 
@@ -18,31 +18,31 @@ Traditional news reading methods often feel tedious and time consuming, leading 
 
 ![](images\image-20230614003123800.png)
 
-![image-20230614003147958](images\image-20230614003147958.png)
+![image-20230614003147958](images/image-20230614003147958.png)
 
 #### Abstractive Summarization Module
 
 ##### Encoder-Decoder Transformer Model
 
-![image-20230614003444224](images\image-20230614003444224.png)
+![image-20230614003444224](images/image-20230614003444224.png)
 
 ### Text to Speech Module
 
 ##### The Full Text-To-Speech Module Architecture
 
-![image-20230614003612048](images\image-20230614003612048.png)
+![image-20230614003612048](images/image-20230614003612048.png)
 
 ### Sentiment Analysis Module
 
 ##### The Sentiment Analysis Module Architecture
 
-![image-20230614003759569](images\image-20230614003759569.png)
+![image-20230614003759569](images/image-20230614003759569.png)
 
 ### Avatar Generation Module
 
 ##### The Full Lib Syncing Module Architecture
 
-![image-20230614003657220](images\image-20230614003657220.png)
+![image-20230614003657220](images/image-20230614003657220.png)
 
 ## Datasets
 
