@@ -7,6 +7,15 @@ const cnnBaseUrl = "https://search.api.cnn.com/content";
 // ?q=football&size=10&from=30&page=4&sort=newest
 const localBaseUrl = " http://192.168.1.15";
 
+const emotionMap = {
+  "anger": 0,
+  "sadness": 1,
+  "fear": 1,
+  "love": 3,
+  "joy": 3,
+  "surprise": 4,
+};
+
 const firstColor = Color.fromARGB(255, 177, 155, 142);
 const secondColor = Color(0xFF457B9D);
 const thirdColor = Color(0xFFF1FAEE);

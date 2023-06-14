@@ -13,7 +13,8 @@ class CnnArticleModel extends ChangeNotifier {
   String? summary;
   File? audio;
   File? video;
-  String emotion = "";
+  String? emotion;
+  int emotionIndex = 2;
   double emotionAccuracy = 0.0;
 
   CnnArticleModel({
@@ -43,13 +44,18 @@ class CnnArticleModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  set setEmotion(String emotion) {
+  set setEmotion(String? emotion) {
     this.emotion = emotion;
     notifyListeners();
   }
 
   set setEmotionAccuracy(double emotionAccuracy) {
     this.emotionAccuracy = emotionAccuracy;
+    notifyListeners();
+  }
+
+  set setEmotionIndex(int emotionIndex) {
+    this.emotionIndex = emotionIndex;
     notifyListeners();
   }
 
@@ -62,6 +68,8 @@ class CnnArticleModel extends ChangeNotifier {
   get getEmotion => emotion;
 
   get getEmotionAccuracy => emotionAccuracy;
+
+  get getEmotionIndex => emotionIndex;
 
   factory CnnArticleModel.fromJson(Map<String, dynamic> json) {
     return CnnArticleModel(

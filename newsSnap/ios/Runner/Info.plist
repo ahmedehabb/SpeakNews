@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>News Snap</string>
+	<string>Speak News</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,6 +24,14 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Speak News requires access to the photo library.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Speak News requires read and write access to the photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Speak News requires access to the camera.</string>
+
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

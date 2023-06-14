@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newssnap/articles_screen/controller/emotion_cubit.dart';
 import 'package:newssnap/common_widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -14,6 +15,7 @@ import '../../audio_screen/controller/audio_state.dart';
 import '../../audio_screen/view/audio_screen.dart';
 import '../../bookmark_screen/controller/database_helper.dart';
 import '../../common_widgets/circular_icon_button.dart';
+import '../../common_widgets/review_slider.dart';
 import '../../video_screen/controller/video_cubit.dart';
 import '../../video_screen/controller/video_state.dart';
 import '../../video_screen/view/avatar_video_screen.dart';
@@ -30,6 +32,7 @@ class ArticleDetails extends StatefulWidget {
 
 class _ArticleDetailsState extends State<ArticleDetails> {
   bool showSummary = true;
+  int emotionIndex = 2;
 
   Future<String> getSummary(BuildContext context) async {
     String? summarizedContent = await BlocProvider.of<SummaryCubit>(context)
@@ -37,12 +40,27 @@ class _ArticleDetailsState extends State<ArticleDetails> {
     return summarizedContent!;
   }
 
+  Future<int> getEmotion(String summary, BuildContext context) async {
+    int emotionIndex = await BlocProvider.of<EmotionCubit>(context)
+        .getEmotion(summary, context);
+    return emotionIndex;
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      Provider.of<CnnArticleModel>(context, listen: false).setAudio = null;
+      Provider.of<CnnArticleModel>(context, listen: false).setVideo = null;
+      Provider.of<CnnArticleModel>(context, listen: false).setSummary = null;
+      Provider.of<CnnArticleModel>(context, listen: false).setEmotion = null;
+      Provider.of<CnnArticleModel>(context, listen: false).setEmotionIndex = 2;
+
       getSummary(context).then((summarizedContent) {
         Provider.of<CnnArticleModel>(context, listen: false).setSummary =
             summarizedContent;
+        getEmotion(summarizedContent, context).then((value) {
+          emotionIndex = value;
+        });
         Get.snackbar(
           "Done",
           "Summary is ready 🎉",
@@ -84,7 +102,6 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                       CircularIconButton(
                           icon: Icons.more_horiz,
                           onTap: () {
-                            debugPrint("More button pressed");
                             Get.bottomSheet(
                               backgroundColor: Colors.white,
                               SizedBox(
@@ -217,17 +234,32 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                             widget.article.title!,
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 22.sp,
+                              fontSize: 21.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            widget.article.publishedAt!,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14.sp,
-                            ),
-                          ),
+                          Provider.of<CnnArticleModel>(context).getEmotion !=
+                                  null
+                              ? ReviewSlider(
+                                  circleDiameter: 55,
+                                  optionStyle: const TextStyle(
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  initialValue:
+                                      Provider.of<CnnArticleModel>(context)
+                                              .getEmotionIndex ??
+                                          emotionIndex,
+                                  options: const [
+                                    'Angry',
+                                    'Sad',
+                                    'Neutral',
+                                    'Happy',
+                                    'Surprise'
+                                  ],
+                                  onChange: (value) {},
+                                )
+                              : const LoadingWidget(),
                         ],
                       ),
                       Flexible(
@@ -242,7 +274,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                 textAlign: TextAlign.justify,
                                 style: GoogleFonts.aBeeZee(
                                   letterSpacing: 0.4,
-                                  fontSize: 18,
+                                  fontSize: 17,
                                   height: 1.2,
                                 ),
                               ),
@@ -267,7 +299,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                   if (audioInArticle == null) {
                                     File? audioFile = await context
                                         .read<AudioCubit>()
-                                        .getAudio(articleText);
+                                        .getAudio(articleText, context);
                                     if (audioFile == null) {
                                       Get.snackbar(
                                         "Error",
@@ -283,10 +315,6 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                         AudioScreen(audioFile: audioInArticle));
                                   }
                                 },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all(Colors.orange),
-                                ),
                                 child: Text(
                                     Provider.of<CnnArticleModel>(context)
                                                 .getAudio ==
@@ -313,7 +341,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                       audioInArticle == null) {
                                     File? videoFile = await context
                                         .read<AudioCubit>()
-                                        .getAudio(articleText)
+                                        .getAudio(articleText, context)
                                         .then(
                                       (audioFile) async {
                                         if (audioFile == null) {
@@ -321,7 +349,7 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                         }
                                         return await context
                                             .read<VideoCubit>()
-                                            .getAvatarVideo(audioFile);
+                                            .getAvatarVideo(audioFile, context);
                                       },
                                     );
                                     if (videoFile == null) {
@@ -338,7 +366,8 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                   } else if (videoInArticle == null) {
                                     File? videoFile = await context
                                         .read<VideoCubit>()
-                                        .getAvatarVideo(audioInArticle!);
+                                        .getAvatarVideo(
+                                            audioInArticle!, context);
                                     if (videoFile == null) {
                                       Get.snackbar(
                                         "Error",
@@ -357,10 +386,6 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                                   }
                                   debugPrint("Watch button pressed");
                                 },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all(Colors.orange),
-                                ),
                                 child: Text(
                                     Provider.of<CnnArticleModel>(context)
                                                 .getVideo ==
@@ -372,7 +397,6 @@ class _ArticleDetailsState extends State<ArticleDetails> {
                           ],
                         ),
                       ),
-                      //  Flexible(flex: 4, child: const EgyptHorizontalArticles()),
                     ],
                   ),
                 ),

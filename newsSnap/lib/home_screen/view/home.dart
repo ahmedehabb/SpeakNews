@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:newssnap/common_widgets/circular_icon_button.dart';
 import 'package:newssnap/home_screen/constants.dart';
+import 'package:newssnap/settings_screen/view/settings_screen.dart';
 
 import '../../articles_screen/view/all_articles.dart';
 import '../model/category_new.dart';
@@ -52,6 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: backgroundColor,
         scrolledUnderElevation: 0,
         centerTitle: true,
+        actions: [
+          CircularIconButton(
+              icon: Icons.settings,
+              onTap: () {
+                Get.to(() => const SettingsScreen());
+              })
+        ],
       ),
       backgroundColor: backgroundColor,
       body: SafeArea(

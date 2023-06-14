@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:newssnap/articles_screen/model/cnn_article_model.dart';
 import 'package:newssnap/common_widgets/circular_icon_button.dart';
-import 'package:provider/provider.dart';
 
 class AudioScreen extends StatefulWidget {
   const AudioScreen({super.key, required this.audioFile});
@@ -45,9 +43,10 @@ class _AudioScreenState extends State<AudioScreen> {
       });
     });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Provider.of<CnnArticleModel>(context).setAudio = widget.audioFile;
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   Provider.of<CnnArticleModel>(context, listen: false).setAudio =
+    //       widget.audioFile;
+    // });
   }
 
   @override
@@ -104,8 +103,6 @@ class _AudioScreenState extends State<AudioScreen> {
                         }
                       },
                     ),
-
-                    // SoundWaveformWidget(),
                   ],
                 )),
           ),

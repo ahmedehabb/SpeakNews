@@ -2,10 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:newssnap/common_widgets/loading_widget.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-
-import '../../articles_screen/model/cnn_article_model.dart';
 
 class AvatarVideoScreen extends StatefulWidget {
   const AvatarVideoScreen({super.key, required this.videoFile});
@@ -26,11 +23,12 @@ class _AvatarVideoScreenState extends State<AvatarVideoScreen> {
 
     _controller = VideoPlayerController.file(widget.videoFile);
     _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(true);
+    // _controller.setLooping(true);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Provider.of<CnnArticleModel>(context).setVideo = widget.videoFile;
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   Provider.of<CnnArticleModel>(context, listen: false).setVideo =
+    //       widget.videoFile;
+    // });
   }
 
   @override

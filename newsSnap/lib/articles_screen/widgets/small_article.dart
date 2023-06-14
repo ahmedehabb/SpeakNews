@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
 import '../model/cnn_article_model.dart';
 import '../view/article_details.dart';
@@ -20,11 +19,6 @@ class SmallArticle extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () async {
-          Provider.of<CnnArticleModel>(context, listen: false).setAudio = null;
-          Provider.of<CnnArticleModel>(context, listen: false).setVideo = null;
-          Provider.of<CnnArticleModel>(context, listen: false).setSummary =
-              null;
-
           Get.to(
             () => ArticleDetails(
               article: article,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:newssnap/articles_screen/controller/emotion_cubit.dart';
+import 'package:newssnap/settings_screen/model/settings_model.dart';
 import 'package:provider/provider.dart';
 
 import '../articles_screen/controller/articles_cubit.dart';
@@ -44,6 +45,9 @@ class NewsSnap extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<CnnArticleModel>(
             create: (context) => CnnArticleModel(),
+          ),
+          ChangeNotifierProvider<SettingsModel>(
+            create: (context) => SettingsModel(),
           ),
         ],
         child: ScreenUtilInit(
